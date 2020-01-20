@@ -8,26 +8,56 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the TimedRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the build.gradle file in the
- * project.
- */
+import com.ctre.phoenix.motorcontrol.can.*;
+
 public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-  /**
-   * This function is run when the robot is first started up and should be
-   * used for any initialization code.
-   */
+  //#region Inputs
+  private XboxController controller = new XboxController(0);
+  private double baseLeftSpeed;
+  private double baseRightSpeed;
+  private boolean speedUp;
+  private boolean speedDown;
+  private boolean armsUp;
+  private boolean armsDown;
+  //#endregion
+
+  //#region Base Diff Drive
+  private WPI_VictorSPX lf_motor = new WPI_VictorSPX(0);
+  private WPI_VictorSPX lb_motor = new WPI_VictorSPX(2);
+  private WPI_VictorSPX rf_motor = new WPI_VictorSPX(1);
+  private WPI_VictorSPX rb_motor = new WPI_VictorSPX(3);
+  private SpeedControllerGroup l_speedCon = new SpeedControllerGroup(lf_motor, lb_motor);
+  private SpeedControllerGroup r_speedCon = new SpeedControllerGroup(rf_motor, rb_motor);
+  private DifferentialDrive baseDiffDrive = new DifferentialDrive(l_speedCon, r_speedCon);
+
+  private int speedChanel = 0;
+  private double[] speedList = {0.4, 0.7, 1.0};
+
+  private int baseReverse = 1;
+  //#endregion
+
+  //#region Climbing
+  private WPI_TalonSRX armLeft = new WPI_TalonSRX(0);
+  private WPI_TalonSRX armRight = new WPI_TalonSRX(1);
+  //private WPI_VictorSPX armLeft = new WPI_VictorSPX(1);
+  //private WPI_VictorSPX armRight = new WPI_VictorSPX(2);
+  private SpeedControllerGroup armsCon = new SpeedControllerGroup(armLeft, armRight);
+
+  private double armsSpeed = 0.5;
+  //#endregion
+
   @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
@@ -35,29 +65,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
   }
 
-  /**
-   * This function is called every robot packet, no matter the mode. Use
-   * this for items like diagnostics that you want ran during disabled,
-   * autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
-   */
   @Override
   public void robotPeriodic() {
   }
 
-  /**
-   * This autonomous (along with the chooser code above) shows how to select
-   * between different autonomous modes using the dashboard. The sendable
-   * chooser code works with the Java SmartDashboard. If you prefer the
-   * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-   * getString line to get the auto name from the text box below the Gyro
-   *
-   * <p>You can add additional auto modes by adding additional comparisons to
-   * the switch structure below with additional strings. If using the
-   * SendableChooser make sure to add them to the chooser code above as well.
-   */
   @Override
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
@@ -65,9 +76,6 @@ public class Robot extends TimedRobot {
     System.out.println("Auto selected: " + m_autoSelected);
   }
 
-  /**
-   * This function is called periodically during autonomous.
-   */
   @Override
   public void autonomousPeriodic() {
     switch (m_autoSelected) {
@@ -81,16 +89,36 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /**
-   * This function is called periodically during operator control.
-   */
-  @Override
-  public void teleopPeriodic() {
+  private void getInput() {
+    baseLeftSpeed = controller.getY(Hand.kLeft);
+    baseRightSpeed = controller.getY(Hand.kRight);
+    speedUp = controller.getBumperPressed(Hand.kRight);
+    speedDown = controller.getBumperPressed(Hand.kLeft);
   }
 
-  /**
-   * This function is called periodically during test mode.
-   */
+  @Override
+  public void teleopPeriodic() {
+    getInput();
+     //#region Base Movement
+     if (Math.abs(baseLeftSpeed)>0.1 | Math.abs(baseRightSpeed)>0.1) {
+      baseDiffDrive.tankDrive(baseLeftSpeed*speedList[speedChanel]*baseReverse, 
+                              baseRightSpeed*speedList[speedChanel]*baseReverse);
+    }
+    else {
+      baseDiffDrive.tankDrive(0, 0);
+    }
+
+    if (speedUp) {
+      speedChanel++;
+      if (speedChanel>=speedList.length) speedChanel = speedList.length;
+    }
+    if (speedDown) {
+      speedChanel--;
+      if (speedChanel<=-1) speedChanel = 0;
+    }
+    //#endregion
+  }
+
   @Override
   public void testPeriodic() {
   }
