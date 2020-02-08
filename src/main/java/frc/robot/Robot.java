@@ -29,6 +29,8 @@ public class Robot extends TimedRobot {
     private TalonSRX _talon;
 
     private int targetPositionRotations;
+    private int targetVelocity;
+    private int slotIdx;
     public PID_Motor(TalonSRX targetTalonSRX, double F_value, double P_value, double I_value,
      double D_value, int pidIdx, int timeout) {
       _talon = targetTalonSRX;
@@ -37,9 +39,10 @@ public class Robot extends TimedRobot {
 
     public void set(double F_value, double P_value, double I_value,
      double D_value, int pidIdx, int timeout) {
+       slotIdx = pidIdx;
       _talon.configFactoryDefault();
 		  _talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 
-                                            pidIdx,timeout);
+                                            slotIdx,timeout);
 
 		  _talon.setSensorPhase(true);
 
@@ -50,18 +53,19 @@ public class Robot extends TimedRobot {
 		  _talon.configPeakOutputForward(1, timeout);
 		  _talon.configPeakOutputReverse(-1, timeout);
 
-		  _talon.configAllowableClosedloopError(0, pidIdx, timeout);
-      _talon.config_kF(pidIdx, F_value, timeout);
-      _talon.config_kP(pidIdx, P_value, timeout);
-      _talon.config_kI(pidIdx, I_value, timeout);
-      _talon.config_kD(pidIdx, D_value, timeout);
+		  _talon.configAllowableClosedloopError(0, slotIdx, timeout);
+      _talon.config_kF(slotIdx, F_value, timeout);
+      _talon.config_kP(slotIdx, P_value, timeout);
+      _talon.config_kI(slotIdx, I_value, timeout);
+      _talon.config_kD(slotIdx, D_value, timeout);
 
       int absolutePosition = _talon.getSensorCollection().getPulseWidthPosition();
       absolutePosition &= 0xFFF;
       absolutePosition *= -1;
-      _talon.setSelectedSensorPosition(absolutePosition, pidIdx, timeout);
+      _talon.setSelectedSensorPosition(absolutePosition, slotIdx, timeout);
      }
     // Write commonly used function below or simply use PID_Motor._talon.WHATEVERTHEYHAVE()
+    int printLoop = 0;
     public void PrintValue() {
       StringBuilder _sb = new StringBuilder();
       double motorOutput = _talon.getMotorOutputPercent();
@@ -83,10 +87,26 @@ public class Robot extends TimedRobot {
         _sb.append(targetPositionRotations);
         _sb.append("u");	/// Native Units
       }
+      else if (_talon.getControlMode() == ControlMode.Velocity) {
+      _sb.append("\t err:");
+			_sb.append(_talon.getClosedLoopError(slotIdx));
+			_sb.append("\t trg:");
+			_sb.append(targetVelocity);
+      }
+      printLoop++;
+      if (printLoop>=10) {
+        printLoop = 0;
+        System.out.println(_sb.toString());
+      }
+      _sb.setLength(0);
     }
-    public void PosControl(int target) {
-      targetPositionRotations = target;
+    public void PosControl(int targetPos) {
+      targetPositionRotations = targetPos;
       _talon.set(ControlMode.Position, targetPositionRotations);
+    }
+    public void VelControl(int targetVel) {
+      targetVelocity = targetVel;
+      _talon.set(ControlMode.Velocity, targetVelocity);
     }
   }
   //#region Inputs
@@ -116,9 +136,9 @@ public class Robot extends TimedRobot {
 
   //#region Climbing
   private WPI_TalonSRX armLeft = new WPI_TalonSRX(0);
-  private PID_Motor armLeftPID = new PID_Motor(armLeft, 0, 10, 0, 0, 0, 30); // example value, needs tuning
+  private PID_Motor armLeftPID = new PID_Motor(armLeft, 0, 10, 0, 2, 0, 30); // example value, needs tuning
   private WPI_TalonSRX armRight = new WPI_TalonSRX(1);
-  private PID_Motor armRightPID = new PID_Motor(armRight, 0, 10, 0, 0, 0, 30); // example value, needs tuning
+  private PID_Motor armRightPID = new PID_Motor(armRight, 0, 10, 0, 2, 0, 30); // example value, needs tuning
   //private WPI_VictorSPX armLeft = new WPI_VictorSPX(1);
   //private WPI_VictorSPX armRight = new WPI_VictorSPX(2);
   private SpeedControllerGroup armsCon = new SpeedControllerGroup(armLeft, armRight);
@@ -183,6 +203,19 @@ public class Robot extends TimedRobot {
       speedChanel--;
       if (speedChanel<=-1) speedChanel = 0;
     }
+    /* PID class example
+    armLeftPID.PrintValue();
+    if (controller.getTriggerAxis(Hand.kRight) >= 0.1) {
+      armLeftPID.VelControl((int)(100*controller.getTriggerAxis(Hand.kRight)));
+    }
+    else {
+      armLeftPID.VelControl(0);
+    }
+    if (controller.getBButton()) {
+      armLeftPID.PosControl(0);
+    }*/
+
+    
     //#endregion
   }
 
