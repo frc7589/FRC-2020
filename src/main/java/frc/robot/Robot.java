@@ -154,8 +154,13 @@ public class Robot extends TimedRobot {
   //private WPI_VictorSPX armLeft = new WPI_VictorSPX(1);
   //private WPI_VictorSPX armRight = new WPI_VictorSPX(2);
   private SpeedControllerGroup armsCon = new SpeedControllerGroup(armLeft, armRight);
+  private WPI_VictorSPX testmotor = new WPI_VictorSPX(9);
 
   private double armsSpeed = 0.5;
+  //#endregion
+
+  //#region collector
+  private Servo frontServo = new Servo(9);
   //#endregion
 
   @Override
@@ -163,6 +168,7 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    frontServo.set(0.02);
   }
 
   @Override
@@ -229,11 +235,14 @@ public class Robot extends TimedRobot {
       armLeftPID.PosControl(0);
     }*/
 
-    
+  
     //#endregion
   }
 
   @Override
   public void testPeriodic() {
+    getInput();
+    
+    
   }
 }
