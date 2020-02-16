@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -117,6 +118,8 @@ public class Robot extends TimedRobot {
   private boolean speedDown;
   private boolean armsUp;
   private boolean armsDown;
+  private boolean aButton;
+  private boolean bButton;
   //#endregion
 
   //#region Base Diff Drive
@@ -132,6 +135,15 @@ public class Robot extends TimedRobot {
   private double[] speedList = {0.5, 0.6, 0.7, 0.8};
 
   private int baseReverse = 1;
+  //#endregion
+
+  //#region shooting
+  private WPI_VictorSPX Lshooter = new WPI_VictorSPX(4);
+  private WPI_VictorSPX Rshooter = new WPI_VictorSPX(6);
+  private DifferentialDrive shooterDiffDrive = new DifferentialDrive(Lshooter, Rshooter);
+
+  private double fire_speed = 0.5;
+
   //#endregion
 
   //#region Climbing
@@ -182,6 +194,8 @@ public class Robot extends TimedRobot {
     baseRightSpeed = controller.getY(Hand.kRight);
     speedUp = controller.getBumperPressed(Hand.kRight);
     speedDown = controller.getBumperPressed(Hand.kLeft);
+    aButton = controller.getAButton();
+    bButton = controller.getBButton();
   }
 
   @Override
