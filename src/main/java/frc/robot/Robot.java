@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
@@ -27,34 +30,34 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   protected class PID_Motor {
-    private TalonSRX _talon;
+    private final TalonSRX _talon;
 
     private int targetPositionRotations;
     private int targetVelocity;
     private int slotIdx;
-    public PID_Motor(TalonSRX targetTalonSRX, double F_value, double P_value, double I_value,
-     double D_value, int pidIdx, int timeout) {
+
+    public PID_Motor(final TalonSRX targetTalonSRX, final double F_value, final double P_value, final double I_value,
+        final double D_value, final int pidIdx, final int timeout) {
       _talon = targetTalonSRX;
       set(F_value, P_value, I_value, D_value, pidIdx, timeout);
     }
 
-    public void set(double F_value, double P_value, double I_value,
-     double D_value, int pidIdx, int timeout) {
-       slotIdx = pidIdx;
+    public void set(final double F_value, final double P_value, final double I_value, final double D_value,
+        final int pidIdx, final int timeout) {
+      slotIdx = pidIdx;
       _talon.configFactoryDefault();
-		  _talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 
-                                            slotIdx,timeout);
+      _talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, slotIdx, timeout);
 
-		  _talon.setSensorPhase(true);
+      _talon.setSensorPhase(true);
 
-		  _talon.setInverted(false);
+      _talon.setInverted(false);
 
-		  _talon.configNominalOutputForward(0, timeout);
-		  _talon.configNominalOutputReverse(0, timeout);
-		  _talon.configPeakOutputForward(1, timeout);
-		  _talon.configPeakOutputReverse(-1, timeout);
+      _talon.configNominalOutputForward(0, timeout);
+      _talon.configNominalOutputReverse(0, timeout);
+      _talon.configPeakOutputForward(1, timeout);
+      _talon.configPeakOutputReverse(-1, timeout);
 
-		  _talon.configAllowableClosedloopError(0, slotIdx, timeout);
+      _talon.configAllowableClosedloopError(0, slotIdx, timeout);
       _talon.config_kF(slotIdx, F_value, timeout);
       _talon.config_kP(slotIdx, P_value, timeout);
       _talon.config_kI(slotIdx, I_value, timeout);
@@ -64,54 +67,59 @@ public class Robot extends TimedRobot {
       absolutePosition &= 0xFFF;
       absolutePosition *= -1;
       _talon.setSelectedSensorPosition(absolutePosition, slotIdx, timeout);
-     }
-    // Write commonly used function below or simply use PID_Motor._talon.WHATEVERTHEYHAVE()
-    int printLoop = 0;
-    public void PrintValue() {
-      StringBuilder _sb = new StringBuilder();
-      double motorOutput = _talon.getMotorOutputPercent();
-      _sb.append("\tout:");
-		  /* Cast to int to remove decimal places */
-		  _sb.append((int) (motorOutput * 100));
-		  _sb.append("%");	// Percent
+    }
 
-		  _sb.append("\tpos:");
-		  _sb.append(_talon.getSelectedSensorPosition(0));
-      _sb.append("u"); 	// Native units
+    // Write commonly used function below or simply use
+    // PID_Motor._talon.WHATEVERTHEYHAVE()
+    int printLoop = 0;
+
+    public void PrintValue() {
+      final StringBuilder _sb = new StringBuilder();
+      final double motorOutput = _talon.getMotorOutputPercent();
+      _sb.append("\tout:");
+      /* Cast to int to remove decimal places */
+      _sb.append((int) (motorOutput * 100));
+      _sb.append("%"); // Percent
+
+      _sb.append("\tpos:");
+      _sb.append(_talon.getSelectedSensorPosition(0));
+      _sb.append("u"); // Native units
       if (_talon.getControlMode() == ControlMode.Position) {
         /* ppend more signals to print when in speed mode. */
         _sb.append("\terr:");
         _sb.append(_talon.getClosedLoopError(0));
-        _sb.append("u");	// Native Units
-  
+        _sb.append("u"); // Native Units
+
         _sb.append("\ttrg:");
         _sb.append(targetPositionRotations);
-        _sb.append("u");	/// Native Units
-      }
-      else if (_talon.getControlMode() == ControlMode.Velocity) {
-      _sb.append("\t err:");
-			_sb.append(_talon.getClosedLoopError(slotIdx));
-			_sb.append("\t trg:");
-			_sb.append(targetVelocity);
+        _sb.append("u"); /// Native Units
+      } else if (_talon.getControlMode() == ControlMode.Velocity) {
+        _sb.append("\t err:");
+        _sb.append(_talon.getClosedLoopError(slotIdx));
+        _sb.append("\t trg:");
+        _sb.append(targetVelocity);
       }
       printLoop++;
-      if (printLoop>=10) {
+      if (printLoop >= 10) {
         printLoop = 0;
         System.out.println(_sb.toString());
       }
       _sb.setLength(0);
     }
-    public void PosControl(int targetPos) {
+
+    public void PosControl(final int targetPos) {
       targetPositionRotations = targetPos;
       _talon.set(ControlMode.Position, targetPositionRotations);
     }
-    public void VelControl(int targetVel) {
+
+    public void VelControl(final int targetVel) {
       targetVelocity = targetVel;
-      _talon.set(ControlMode.Velocity, targetVelocity);
+      _talon.set(ControlMode.Velocity, targetVelocity); 
     }
   }
-  //#region Inputs
-  private XboxController controller = new XboxController(0);
+
+  // #region Inputs
+  private final XboxController controller = new XboxController(0);
   private double baseLeftSpeed;
   private double baseRightSpeed;
   private boolean speedUp;
@@ -120,47 +128,53 @@ public class Robot extends TimedRobot {
   private boolean armsDown;
   private boolean aButton;
   private boolean bButton;
-  //#endregion
+  // #endregion
 
-  //#region Base Diff Drive
-  private WPI_VictorSPX lf_motor = new WPI_VictorSPX(0);
-  private WPI_VictorSPX lb_motor = new WPI_VictorSPX(2);
-  private WPI_VictorSPX rf_motor = new WPI_VictorSPX(1);
-  private WPI_VictorSPX rb_motor = new WPI_VictorSPX(3);
-  private SpeedControllerGroup l_speedCon = new SpeedControllerGroup(lf_motor, lb_motor);
-  private SpeedControllerGroup r_speedCon = new SpeedControllerGroup(rf_motor, rb_motor);
-  private DifferentialDrive baseDiffDrive = new DifferentialDrive(l_speedCon, r_speedCon);
+  // #region Base Diff Drive
+  private final WPI_VictorSPX lf_motor = new WPI_VictorSPX(0);
+  private final WPI_VictorSPX lb_motor = new WPI_VictorSPX(2);
+  private final WPI_VictorSPX rf_motor = new WPI_VictorSPX(1);
+  private final WPI_VictorSPX rb_motor = new WPI_VictorSPX(3);
+  private final SpeedControllerGroup l_speedCon = new SpeedControllerGroup(lf_motor, lb_motor);
+  private final SpeedControllerGroup r_speedCon = new SpeedControllerGroup(rf_motor, rb_motor);
+  private final DifferentialDrive baseDiffDrive = new DifferentialDrive(l_speedCon,  r_speedCon);
 
   private int speedChanel = 0;
-  private double[] speedList = {0.5, 0.6, 0.7, 0.8};
+  private final double[] speedList = { 0.5, 0.6, 0.8, 1.0 };
 
-  private int baseReverse = 1;
+  private final int baseReverse = -1;
+  // #endregion
+
+  // #region shooting
+  private final WPI_VictorSPX Lshooter = new WPI_VictorSPX(4);
+  private final WPI_VictorSPX Rshooter = new WPI_VictorSPX(6);
+  private final DifferentialDrive shooterDiffDrive = new DifferentialDrive(Lshooter, Rshooter);
+
+  private final double fire_speed = 0.5;
+
+  // #endregion
+
+  // #region Climbing
+  private final WPI_TalonSRX armLeft = new WPI_TalonSRX(0);
+  private final PID_Motor armLeftPID = new PID_Motor(armLeft, 0, 10, 0, 2, 0, 30); // example value, needs tuning
+  private final WPI_TalonSRX armRight = new WPI_TalonSRX(1);
+  private final PID_Motor armRightPID = new PID_Motor(armRight, 0, 10, 0, 2, 0, 30); // example value, needs tuning
+  // private WPI_VictorSPX armLeft = new WPI_VictorSPX(1);
+  // private WPI_VictorSPX armRight = new WPI_VictorSPX(2);
+  private final SpeedControllerGroup armsCon = new SpeedControllerGroup(armLeft, armRight);
+  private final WPI_VictorSPX testmotor = new WPI_VictorSPX(9);
+
+  private final double armsSpeed = 0.5;
+  // #endregion
+
+  // #region collector
+  private final Servo frontServo = new Servo(9);
   //#endregion
 
-  //#region shooting
-  private WPI_VictorSPX Lshooter = new WPI_VictorSPX(4);
-  private WPI_VictorSPX Rshooter = new WPI_VictorSPX(6);
-  private DifferentialDrive shooterDiffDrive = new DifferentialDrive(Lshooter, Rshooter);
-
-  private double fire_speed = 0.5;
-
-  //#endregion
-
-  //#region Climbing
-  private WPI_TalonSRX armLeft = new WPI_TalonSRX(0);
-  private PID_Motor armLeftPID = new PID_Motor(armLeft, 0, 10, 0, 2, 0, 30); // example value, needs tuning
-  private WPI_TalonSRX armRight = new WPI_TalonSRX(1);
-  private PID_Motor armRightPID = new PID_Motor(armRight, 0, 10, 0, 2, 0, 30); // example value, needs tuning
-  //private WPI_VictorSPX armLeft = new WPI_VictorSPX(1);
-  //private WPI_VictorSPX armRight = new WPI_VictorSPX(2);
-  private SpeedControllerGroup armsCon = new SpeedControllerGroup(armLeft, armRight);
-  private WPI_VictorSPX testmotor = new WPI_VictorSPX(9);
-
-  private double armsSpeed = 0.5;
-  //#endregion
-
-  //#region collector
-  private Servo frontServo = new Servo(9);
+  //#region vision
+  private NetworkTableEntry buttonAEntry;
+  //private NetworkTableEntry visionEntry;
+  
   //#endregion
 
   @Override
@@ -169,6 +183,13 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
     frontServo.set(0.02);
+
+    //#region vision
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    NetworkTable table = inst.getTable("vision Table");
+    buttonAEntry = table.getEntry("buttonA");
+
+    //#endregion
   }
 
   @Override
@@ -202,6 +223,7 @@ public class Robot extends TimedRobot {
     speedDown = controller.getBumperPressed(Hand.kLeft);
     aButton = controller.getAButton();
     bButton = controller.getBButton();
+    buttonAEntry.setBoolean(aButton);
   }
 
   @Override
@@ -217,7 +239,7 @@ public class Robot extends TimedRobot {
     }
     if (speedUp) {
       speedChanel++;
-      if (speedChanel>=speedList.length) speedChanel = speedList.length;
+      if (speedChanel>=speedList.length) speedChanel = speedList.length-1;
     }
     if (speedDown) {
       speedChanel--;
@@ -235,14 +257,15 @@ public class Robot extends TimedRobot {
       armLeftPID.PosControl(0);
     }*/
 
-  
     //#endregion
+
   }
 
   @Override
   public void testPeriodic() {
     getInput();
-    
-    
+    if(aButton){
+      //System.out.println(testing.isOpened());
+    }
   }
 }
