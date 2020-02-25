@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+<<<<<<< HEAD
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -190,6 +191,30 @@ public class Robot extends TimedRobot {
     buttonAEntry = table.getEntry("buttonA");
 
     //#endregion
+=======
+import frc.robot.Subsystems.BaseDrive;
+import frc.robot.Subsystems.Intaker;
+import frc.robot.Subsystems.Lifter;
+import frc.robot.Subsystems.Shooter;
+
+public class Robot extends TimedRobot {
+
+  BaseDrive baseDrive;
+  Intaker intaker;
+  Shooter shooter;
+  Lifter lifter;
+
+  @Override
+  public void robotInit() {
+    baseDrive = new BaseDrive();
+    shooter = new Shooter();
+    lifter = new Lifter();
+    intaker = new Intaker();
+    baseDrive.InitSubsystem();
+    shooter.InitSubsystem();
+    lifter.InitSubsystem();
+    intaker.InitSubsystem();
+>>>>>>> master
   }
 
   @Override
@@ -198,24 +223,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
   }
 
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
-    }
   }
 
+<<<<<<< HEAD
   private void getInput() {
     baseLeftSpeed = controller.getY(Hand.kLeft);
     baseRightSpeed = controller.getY(Hand.kRight);
@@ -224,10 +238,15 @@ public class Robot extends TimedRobot {
     aButton = controller.getAButton();
     bButton = controller.getBButton();
     buttonAEntry.setBoolean(aButton);
+=======
+  @Override
+  public void teleopInit() { 
+>>>>>>> master
   }
 
   @Override
   public void teleopPeriodic() {
+<<<<<<< HEAD
     getInput();
      //#region Base Movement
     if (Math.abs(baseLeftSpeed)>0.1 | Math.abs(baseRightSpeed)>0.1) {
@@ -259,13 +278,27 @@ public class Robot extends TimedRobot {
 
     //#endregion
 
+=======
+  }
+
+  @Override
+  public void testInit() {
+    Controller.GetInstance().ResetController();
+>>>>>>> master
   }
 
   @Override
   public void testPeriodic() {
+<<<<<<< HEAD
     getInput();
     if(aButton){
       //System.out.println(testing.isOpened());
     }
+=======
+    baseDrive.SubsystemTeleopPeriodic();
+    shooter.SubsystemTeleopPeriodic();
+    lifter.SubsystemTeleopPeriodic();
+    intaker.SubsystemTeleopPeriodic();
+>>>>>>> master
   }
 }
