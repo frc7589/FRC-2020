@@ -13,6 +13,7 @@ import frc.robot.Subsystems.Intaker;
 import frc.robot.Subsystems.Lifter;
 import frc.robot.Subsystems.NWTable;
 import frc.robot.Subsystems.Shooter;
+import frc.robot.Subsystems.Spinner;
 
 public class Robot extends TimedRobot {
 
@@ -21,6 +22,7 @@ public class Robot extends TimedRobot {
   Shooter shooter;
   Lifter lifter;
   NWTable nwTable;
+  Spinner spinner;
 
   @Override
   public void robotInit() {
@@ -29,11 +31,15 @@ public class Robot extends TimedRobot {
     lifter = new Lifter();
     intaker = new Intaker();
     nwTable = new NWTable();
+    spinner = new Spinner();
+    //tester = new Tester();
     baseDrive.InitSubsystem();
-    shooter.InitSubsystem();
-    lifter.InitSubsystem();
+    //shooter.InitSubsystem();
+    //lifter.InitSubsystem();
     intaker.InitSubsystem();
-    nwTable.InitSubsystem();
+    //nwTable.InitSubsystem();
+    spinner.InitSubsystem();
+    //tester.InitSubsystem();
   }
 
   @Override
@@ -64,9 +70,11 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     baseDrive.SubsystemTeleopPeriodic();
-    shooter.SubsystemTeleopPeriodic();
-    lifter.SubsystemTeleopPeriodic();
+    //shooter.SubsystemTeleopPeriodic();
+    //lifter.SubsystemTeleopPeriodic();
     intaker.SubsystemTeleopPeriodic();
-    nwTable.SubsystemTeleopPeriodic();
+    //nwTable.SubsystemTeleopPeriodic();
+    spinner.SubsystemTeleopPeriodic();
+    //tester.SubsystemTeleopPeriodic();
   }
 }

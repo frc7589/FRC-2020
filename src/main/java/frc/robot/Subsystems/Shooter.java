@@ -1,29 +1,25 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import frc.robot.PID_Motor;
 
 public class Shooter extends SubsystemBase {
     private WPI_TalonSRX lShooter;
     private WPI_TalonSRX rShooter;
-    private WPI_VictorSPX transporter;
-    private boolean toggleTransporting = false;
 
     private PID_Motor lPID;
     private PID_Motor rPID;
 
-    private double transportSpd = .35;
-    private double shootSpd = .7;
+    private double[] shootSpd = {.3,.7};
+    private int speedIdx = 0;
 
     @Override
     public void InitSubsystem() {
         super.InitSubsystem();
 
-        lShooter = new WPI_TalonSRX(3);
-        rShooter = new WPI_TalonSRX(4);
-        transporter = new WPI_VictorSPX(2);
+        lShooter = new WPI_TalonSRX(2);
+        rShooter = new WPI_TalonSRX(3);
         lPID = new PID_Motor(lShooter, 0.02, 5, 0, 1, 0, 30);
         rPID = new PID_Motor(rShooter, 0.02, 5, 0, 1, 0, 30);
     }
@@ -31,16 +27,6 @@ public class Shooter extends SubsystemBase {
     @Override
     public void SubsystemTeleopPeriodic() {
         super.SubsystemTeleopPeriodic();
-
-        if (xcon.getAButtonPressed()) {
-            toggleTransporting = !toggleTransporting;
-            if (toggleTransporting) {
-                transporter.set(transportSpd);
-            }
-            else{
-                transporter.set(0);
-            }
-        }
 
         if (xcon.getBButton()) {
             /*
@@ -55,14 +41,18 @@ public class Shooter extends SubsystemBase {
             StartShooting();
         }
         else StopShooting();
+
+        if(xcon.getYButton()){
+            speedIdx = (speedIdx+1)%2;
+        }
         lPID.PrintValue();
         rPID.PrintValue();
         System.out.println("next");
     }
 
     public void StartShooting() {
-        lShooter.set(-shootSpd);
-        rShooter.set(-shootSpd);
+        lShooter.set(-shootSpd[speedIdx]);
+        rShooter.set(-shootSpd[speedIdx]);
     }
 
     public void StopShooting() {
@@ -70,3 +60,5 @@ public class Shooter extends SubsystemBase {
         rShooter.set(0);
     }
 }
+
+

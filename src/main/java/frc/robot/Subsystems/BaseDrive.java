@@ -11,17 +11,17 @@ import frc.robot.*;
 
 public class BaseDrive extends SubsystemBase {
 
-    private WPI_TalonSRX talon_l;
     private WPI_VictorSPX victor_l;
-    private WPI_TalonSRX talon_r;
+    private WPI_TalonSRX talon_l;
     private WPI_VictorSPX victor_r;
+    private WPI_TalonSRX talon_r;
 
     private int speedChanel = 0;
     private double[] speedList = {.4, .7, 1.};
 
-    private SpeedControllerGroup leftGroup = new SpeedControllerGroup(talon_l, victor_l);
-    private SpeedControllerGroup rightGroup = new SpeedControllerGroup(talon_r, victor_r);
-    private DifferentialDrive baseDiffDrive = new DifferentialDrive(leftGroup, rightGroup);
+    private SpeedControllerGroup leftGroup;
+    private SpeedControllerGroup rightGroup;
+    private DifferentialDrive baseDiffDrive;
 
     private PID_Motor leftPID;
     private PID_Motor rightPID;
@@ -30,13 +30,13 @@ public class BaseDrive extends SubsystemBase {
     public void InitSubsystem() {
         super.InitSubsystem();
 
+        victor_l = new WPI_VictorSPX(0);
         talon_l = new WPI_TalonSRX(0);
-        victor_l = new WPI_VictorSPX(5);
-        talon_r = new WPI_TalonSRX(1);
-        victor_r =  new WPI_VictorSPX(6);
+        victor_r = new WPI_VictorSPX(1);
+        talon_r =  new WPI_TalonSRX(1);
 
-        leftGroup = new SpeedControllerGroup(talon_l, victor_l);
-        rightGroup = new SpeedControllerGroup(talon_r, victor_r);
+        leftGroup = new SpeedControllerGroup(victor_l, talon_l);
+        rightGroup = new SpeedControllerGroup(victor_r, talon_r);
         baseDiffDrive = new DifferentialDrive(leftGroup, rightGroup);
         leftPID = new PID_Motor(talon_l, 0, 5, 0, 2, 0, 30);
         rightPID = new PID_Motor(talon_r, 0, 5, 0, 2, 0, 30);
@@ -55,7 +55,8 @@ public class BaseDrive extends SubsystemBase {
         else {
           baseDiffDrive.tankDrive(0, 0);
         }
-        if (xcon.getBumperPressed(Hand.kRight)) {
+
+        if (xcon.getBumperPressed(Hand.kRight)) { 
           speedChanel++;
           if (speedChanel>speedList.length-1) speedChanel = speedList.length-1;
         }
