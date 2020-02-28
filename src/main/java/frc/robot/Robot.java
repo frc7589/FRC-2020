@@ -34,11 +34,11 @@ public class Robot extends TimedRobot {
     spinner = new Spinner();
     //tester = new Tester();
     baseDrive.InitSubsystem();
-    //shooter.InitSubsystem();
+    shooter.InitSubsystem();
     //lifter.InitSubsystem();
     intaker.InitSubsystem();
     //nwTable.InitSubsystem();
-    spinner.InitSubsystem();
+    //spinner.InitSubsystem();
     //tester.InitSubsystem();
   }
 
@@ -69,11 +69,11 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     baseDrive.SubsystemTeleopPeriodic();
-    //shooter.SubsystemTeleopPeriodic();
+    shooter.SubsystemTeleopPeriodic();
     //lifter.SubsystemTeleopPeriodic();
     intaker.SubsystemTeleopPeriodic();
     //nwTable.SubsystemTeleopPeriodic();
-    spinner.SubsystemTeleopPeriodic();
+    //spinner.SubsystemTeleopPeriodic();
     //tester.SubsystemTeleopPeriodic();
   }
 }

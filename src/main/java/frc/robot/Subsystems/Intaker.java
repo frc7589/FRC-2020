@@ -6,33 +6,26 @@ public class Intaker extends SubsystemBase {
 
     private WPI_VictorSPX intake;
 
-    private boolean toggleWheel = false;
-    private boolean toggle = false;
-
-    private double wheelSpd = -0.3;
+    private double highSpd = .45;
+    private double lowSpd = .2;
 
     @Override
     public void InitSubsystem() {
         super.InitSubsystem();
 
-        intake = new WPI_VictorSPX(2);
+        intake = new WPI_VictorSPX(5);
     }
 
     @Override
     public void SubsystemTeleopPeriodic() {
         super.SubsystemTeleopPeriodic();
 
-        if (xcon.getXButtonPressed()) {
-            toggleWheel = !toggleWheel;
-            if (toggleWheel) intake.set(wheelSpd);
-            else intake.set(0);
+        if (xcon.getXButton()) {
+            intake.set(highSpd);
+        }else if(xcon.getYButton()){
+            intake.set(lowSpd);
         }
-
-        if(xcon.getAButton()){
-            toggle = !toggle;
-            if(toggle)intake.set(wheelSpd);
-            else intake.set(0);
-        }
+        else intake.set(0);
 
     }
 }

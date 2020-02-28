@@ -8,10 +8,13 @@ public class Shooter extends SubsystemBase {
     private WPI_TalonSRX lShooter;
     private WPI_TalonSRX rShooter;
 
+    private boolean toggleHigh = false;
+    private boolean toggleLow = false;
+
     private PID_Motor lPID;
     private PID_Motor rPID;
 
-    private double[] shootSpd = {.3,.7};
+    private double[] shootSpd = {-.3, -1.0};
     private int speedIdx = 0;
 
     @Override
@@ -28,26 +31,19 @@ public class Shooter extends SubsystemBase {
     public void SubsystemTeleopPeriodic() {
         super.SubsystemTeleopPeriodic();
 
-        if (xcon.getBButton()) {
-            /*
-            toggleShooting = !toggleShooting;
-            if (toggleShooting) {
-                StartShooting();
-            }
-            else {
-                StopShooting();
-            }
-            */
-            StartShooting();
+        if (xcon.getAButtonPressed()) {
+            toggleLow = !toggleLow;
+            toggleHigh = false;
+            speedIdx = 0;
+            if (toggleLow) StartShooting();
+        }
+        else if (xcon.getBButton()) {
+            toggleHigh = !toggleHigh;
+            toggleLow = false;
+            speedIdx = 1;
+            if (toggleHigh) StartShooting();
         }
         else StopShooting();
-
-        if(xcon.getYButton()){
-            speedIdx = (speedIdx+1)%2;
-        }
-        lPID.PrintValue();
-        rPID.PrintValue();
-        System.out.println("next");
     }
 
     public void StartShooting() {
