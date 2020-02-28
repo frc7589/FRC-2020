@@ -64,7 +64,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    Controller.GetInstance().ResetController();
   }
 
   @Override

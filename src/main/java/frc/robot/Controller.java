@@ -16,10 +16,6 @@ public class Controller {
         return Instance;
     }
 
-    public void ResetController() {
-        Instance = null;
-    }
-
     public XboxController xcon = new XboxController(0);
     
     private boolean UpPressed = false;

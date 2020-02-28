@@ -31,7 +31,7 @@ public class Intaker extends SubsystemBase {
         if(xcon.getAButton()){
             toggle = !toggle;
             if(toggle)intake.set(wheelSpd);
-            else intake.set(0)
+            else intake.set(0);
         }
 
     }
