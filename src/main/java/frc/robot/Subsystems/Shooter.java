@@ -14,7 +14,11 @@ public class Shooter extends SubsystemBase {
     private PID_Motor lPID;
     private PID_Motor rPID;
 
-    private double[] shootSpd = {-.3, -1.0};
+    // 速度在這裡調，shootSpd是舊的，也就是調電壓
+    private double[] shootSpd = {-.3, -.5};
+    // 這邊是PID的速度控制，單位是更新率/100ms，用飛輪的話12代表1/10秒跑一圈=每秒10圈
+    // 開始調速度之前先調PID參數，33~34行
+    private double[] shootSpdPID = {12, 24};
     private int speedIdx = 0;
 
     @Override
@@ -23,8 +27,11 @@ public class Shooter extends SubsystemBase {
 
         lShooter = new WPI_TalonSRX(2);
         rShooter = new WPI_TalonSRX(3);
-        lPID = new PID_Motor(lShooter, 0.02, 5, 0, 1, 0, 30);
-        rPID = new PID_Motor(rShooter, 0.02, 5, 0, 1, 0, 30);
+        // Tune P 和 D 就好，分別是第二個和第四個數字
+        // e.g. (lshooter, 0.02, 0.01, 0, 0.1, 0, 30)
+        // 兩個需要的參數可能不一樣，把他們調到加速度差不多就好 
+        lPID = new PID_Motor(lShooter, 0.02, 0, 0, 0, 0, 30);
+        rPID = new PID_Motor(rShooter, 0.02, 0, 0, 0, 0, 30);
     }
 
     @Override
@@ -47,8 +54,13 @@ public class Shooter extends SubsystemBase {
     }
 
     public void StartShooting() {
-        lShooter.set(-shootSpd[speedIdx]);
-        rShooter.set(-shootSpd[speedIdx]);
+        // 舊的，電壓控制
+        //lShooter.set(-shootSpd[speedIdx]);
+        //rShooter.set(-shootSpd[speedIdx]);
+
+        // 新的PID
+        lShooter.set(-shootSpdPID[speedIdx]);
+        rShooter.set(-shootSpdPID[speedIdx]);
     }
 
     public void StopShooting() {

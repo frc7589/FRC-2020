@@ -11,6 +11,7 @@ public class EncTest extends SubsystemBase {
     private WPI_TalonSRX rShooter;
     private WPI_VictorSPX trans;
     private PID_Motor lPID;
+    private PID_Motor rPID;
 
     @Override
     public void InitSubsystem() {
@@ -20,6 +21,7 @@ public class EncTest extends SubsystemBase {
         rShooter = new WPI_TalonSRX(3);
         trans = new WPI_VictorSPX(3);
         lPID = new PID_Motor(lShooter, 0.02, 5, 0, 1, 0, 30);
+        rPID = new PID_Motor(rShooter, 0.02, 5, 0, 1, 0, 30);
     }
 
     @Override
@@ -33,12 +35,13 @@ public class EncTest extends SubsystemBase {
             trans.set(0);
         }
 
-        if (xcon.getTriggerAxis(Hand.kRight)>.1) {
-            lShooter.set(xcon.getTriggerAxis(Hand.kRight));
+        if (xcon.getTriggerAxis(Hand.kRight)>.1 || xcon.getTriggerAxis(Hand.kLeft)>.1) {
+            lShooter.set(xcon.getTriggerAxis(Hand.kLeft));
             rShooter.set(xcon.getTriggerAxis(Hand.kRight));
         }
         else{
             lShooter.set(0);
+            rShooter.set(0);
         }
     }
 }
