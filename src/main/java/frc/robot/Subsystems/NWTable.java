@@ -4,19 +4,20 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
+
 public class NWTable extends SubsystemBase{
-    private NetworkTableEntry startButtonEntry;
+    public NetworkTableEntry startButtonEntry;
+
+    public NetworkTable vTable;
 
     @Override
     public void InitSubsystem(){
         super.InitSubsystem();
 
         NetworkTableInstance inst = NetworkTableInstance.getDefault();
+        vTable = inst.getTable("vision table");
 
-        NetworkTable vTable = inst.getTable("vision table");
-
-        startButtonEntry = inst.getTable("vision table").getEntry("start button");
-
+        startButtonEntry = vTable.getEntry("start button");
     }
 
     @Override

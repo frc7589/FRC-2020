@@ -32,13 +32,12 @@ public class Robot extends TimedRobot {
     intaker = new Intaker();
     nwTable = new NWTable();
     spinner = new Spinner();
-    //tester = new Tester();
     baseDrive.InitSubsystem();
     //shooter.InitSubsystem();
     //lifter.InitSubsystem();
-    intaker.InitSubsystem();
-    //nwTable.InitSubsystem();
-    spinner.InitSubsystem();
+    //intaker.InitSubsystem();
+    nwTable.InitSubsystem();
+    //spinner.InitSubsystem();
     //tester.InitSubsystem();
   }
 
@@ -52,6 +51,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
+    baseDrive.SubsystemAutoPeriodic();
   }
 
   @Override
@@ -72,9 +72,8 @@ public class Robot extends TimedRobot {
     baseDrive.SubsystemTeleopPeriodic();
     //shooter.SubsystemTeleopPeriodic();
     //lifter.SubsystemTeleopPeriodic();
-    intaker.SubsystemTeleopPeriodic();
-    //nwTable.SubsystemTeleopPeriodic();
-    spinner.SubsystemTeleopPeriodic();
-    //tester.SubsystemTeleopPeriodic();
+    //intaker.SubsystemTeleopPeriodic();
+    nwTable.SubsystemTeleopPeriodic();
+    //spinner.SubsystemTeleopPeriodic();
   }
 }

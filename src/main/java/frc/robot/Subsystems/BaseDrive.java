@@ -4,6 +4,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,8 +14,10 @@ import frc.robot.*;
 public class BaseDrive extends SubsystemBase {
 
     private WPI_VictorSPX victor_l;
+    private WPI_VictorSPX victor_l1;
     private WPI_TalonSRX talon_l;
     private WPI_VictorSPX victor_r;
+    private WPI_VictorSPX victor_r1;
     private WPI_TalonSRX talon_r;
 
     private int speedChanel = 0;
@@ -26,21 +30,30 @@ public class BaseDrive extends SubsystemBase {
     private PID_Motor leftPID;
     private PID_Motor rightPID;
 
+    private NetworkTable vTable;
+    private double gap = 0.0;
+    private double dist = 0.0;
+
+
     @Override
     public void InitSubsystem() {
         super.InitSubsystem();
 
         victor_l = new WPI_VictorSPX(0);
-        talon_l = new WPI_TalonSRX(0);
+        victor_l1 = new WPI_VictorSPX(2);
+        //talon_l = new WPI_TalonSRX(0);
         victor_r = new WPI_VictorSPX(1);
-        talon_r =  new WPI_TalonSRX(1);
+        victor_r1 = new WPI_VictorSPX(3);
+        //talon_r =  new WPI_TalonSRX(1);
 
-        leftGroup = new SpeedControllerGroup(victor_l, talon_l);
-        rightGroup = new SpeedControllerGroup(victor_r, talon_r);
+        leftGroup = new SpeedControllerGroup(victor_l, victor_l1);
+        rightGroup = new SpeedControllerGroup(victor_r, victor_r1);
         baseDiffDrive = new DifferentialDrive(leftGroup, rightGroup);
-        leftPID = new PID_Motor(talon_l, 0, 5, 0, 2, 0, 30);
-        rightPID = new PID_Motor(talon_r, 0, 5, 0, 2, 0, 30);
+        //leftPID = new PID_Motor(talon_l, 0, 5, 0, 2, 0, 30);
+        //rightPID = new PID_Motor(talon_r, 0, 5, 0, 2, 0, 30);
         SmartDashboard.putNumber("Base Speed", speedList[speedChanel]);
+        
+        vTable = NetworkTableInstance.getDefault().getTable("vision table");
     }
 
     @Override
@@ -69,5 +82,18 @@ public class BaseDrive extends SubsystemBase {
     @Override
     public void SubsystemAutoPeriodic() {
       super.SubsystemAutoPeriodic();
+      
+      gap = vTable.getEntry("Error Gap").getDouble(0.0);
+      dist = vTable.getEntry("distant").getDouble(0.0);
+
+      if(gap >= 3.0){
+        baseDiffDrive.tankDrive(0.5, -0.5);
+      }
+      else if(gap <= -3.0){
+        baseDiffDrive.tankDrive(-0.5, 0.5);
+      }
+      else{
+        baseDiffDrive.tankDrive(0.0, 0.0);
+      }
     }
 }
