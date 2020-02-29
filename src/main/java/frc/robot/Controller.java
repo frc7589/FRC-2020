@@ -16,19 +16,25 @@ public class Controller {
         return Instance;
     }
 
-    public void ResetController() {
-        Instance = null;
-    }
-
     public XboxController xcon = new XboxController(0);
     
     private boolean UpPressed = false;
-    public boolean GetDPadUpPressed() {
+    public boolean Get_POV_UpPressed() {
         if (!UpPressed && xcon.getPOV() == 0) {
             UpPressed = true;
             return true;
         }
         if (xcon.getPOV() != 0) UpPressed = false;
         return (xcon.getPOV() == 0);
+    }
+    
+    private boolean RightPressed = false;
+    public boolean Get_POV_RightPressed() {
+        if (!RightPressed && xcon.getPOV() == 90) {
+            RightPressed = true;
+            return true;
+        }
+        if (xcon.getPOV() != 90) RightPressed = false;
+        return (xcon.getPOV() == 90);
     }
 }

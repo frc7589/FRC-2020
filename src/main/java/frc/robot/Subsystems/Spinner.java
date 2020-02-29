@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.Controller;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class Spinner extends SubsystemBase {
 
@@ -31,6 +33,8 @@ public class Spinner extends SubsystemBase {
     private boolean start;
     private int num;
 
+    boolean toggleP2 = false;
+
     @Override
     public void InitSubsystem() {
         super.InitSubsystem();
@@ -41,7 +45,11 @@ public class Spinner extends SubsystemBase {
         m_colorMatcher.addColorMatch(kYellowTarget);
 
         wheelArm = new Servo(0);
+<<<<<<< HEAD
         wheelSpinner = new WPI_VictorSPX(0);
+=======
+        wheelSpinner = new WPI_VictorSPX(6);
+>>>>>>> f3859d3f99289d166eb3837bfdd8b527e02a65a8
 
         targetColorIdx = 0;
         start = false;
@@ -52,66 +60,92 @@ public class Spinner extends SubsystemBase {
     @Override
     public void SubsystemTeleopPeriodic() {
         super.SubsystemTeleopPeriodic();
-        Sensing();
+        Color sensedColor = SensedColor();
         SmartDashboard.putString("target color", color[targetColorIdx]);
 
+        // Toggle Spinner Arm
         if(xcon.getTriggerAxis(Hand.kRight) >= 0.5){
             wheelArm.set(num);
             num = (num+1)%2;
         }
 
+        // Manual control
         if(xcon.getTriggerAxis(Hand.kLeft) >= 0.5){
+<<<<<<< HEAD
             wheelSpinner.set(0.5);
+=======
+            wheelSpinner.set(.3);
+>>>>>>> f3859d3f99289d166eb3837bfdd8b527e02a65a8
         }
         else{
             wheelSpinner.set(0.0);
         }
 
-        if(xcon.getPOV() == 90){
-            targetColorIdx = (targetColorIdx+1)%4;
+        // Phase 2, Desired Color
+        String gameData = DriverStation.getInstance().getGameSpecificMessage();
+        if (Controller.GetInstance().Get_POV_RightPressed()) {
+            toggleP2 = !toggleP2;
         }
-
-        if(xcon.getPOV() == 270 || start){
-
-            if(!start){
-                targetColorIdx = (targetColorIdx+2)%4;
+        if (toggleP2) {
+            // Check if the sensed color matches the given color
+            if (SensedColor()!=DesiredColor_P2("G")) {
+                wheelSpinner.set(.3);
             }
-
-            if(colorString != color[targetColorIdx]){
-                start = true;
-                wheelSpinner.set(1.0);
-            }
-            else{
-                start = false;
-                wheelSpinner.set(0.0);
+            else {
+                wheelSpinner.set(0);
+                toggleP2 = false;
             }
         }
+        SensedColor();
     }
 
-    public void Sensing() {
+    Color SensedColor() {
         Color detectedColor = m_colorSensor.getColor();
         ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
 
         if (match.color == kBlueTarget) {
             colorString = color[0];
+            System.out.println("Blue");
         } 
         else if (match.color == kRedTarget) {
             colorString = color[1];
+            System.out.println("Red");
         } 
         else if (match.color == kGreenTarget) {
             colorString = color[2];
+            System.out.println("Gr");
         } 
         else if (match.color == kYellowTarget) {
             colorString = color[3];
+            System.out.println("Yel");
         } 
         else {
             colorString = "Unknown";
+            System.out.println("----");
         }
 
-    SmartDashboard.putNumber("Red", detectedColor.red);
-    SmartDashboard.putNumber("Green", detectedColor.green);
-    SmartDashboard.putNumber("Blue", detectedColor.blue);
-    SmartDashboard.putNumber("Confidence", match.confidence);
-    SmartDashboard.putString("Detected Color", colorString);
+        SmartDashboard.putNumber("Red", detectedColor.red);
+        SmartDashboard.putNumber("Green", detectedColor.green);
+        SmartDashboard.putNumber("Blue", detectedColor.blue);
+        SmartDashboard.putNumber("Confidence", match.confidence);
+        SmartDashboard.putString("Detected Color", colorString);
+
+        return match.color;
+    }
+
+    Color DesiredColor_P2(String ColorMsg) {
+        switch (ColorMsg.charAt(0))
+        {
+            case 'B' :
+                return kBlueTarget;
+            case 'G' :
+                return kGreenTarget;
+            case 'R' :
+                return kRedTarget;
+            case 'Y' :
+                return kYellowTarget;
+            default :
+                return null;
+        }    
     }
 }

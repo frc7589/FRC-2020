@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.Subsystems.BaseDrive;
+import frc.robot.Subsystems.EncTest;
 import frc.robot.Subsystems.Intaker;
 import frc.robot.Subsystems.Lifter;
 import frc.robot.Subsystems.NWTable;
@@ -23,6 +24,7 @@ public class Robot extends TimedRobot {
   Lifter lifter;
   NWTable nwTable;
   Spinner spinner;
+  EncTest encTest;
 
   @Override
   public void robotInit() {
@@ -32,13 +34,25 @@ public class Robot extends TimedRobot {
     intaker = new Intaker();
     nwTable = new NWTable();
     spinner = new Spinner();
+<<<<<<< HEAD
     baseDrive.InitSubsystem();
     //shooter.InitSubsystem();
     //lifter.InitSubsystem();
     //intaker.InitSubsystem();
     nwTable.InitSubsystem();
     //spinner.InitSubsystem();
+=======
+    encTest = new EncTest();
+    //tester = new Tester();
+    //baseDrive.InitSubsystem();
+    //shooter.InitSubsystem();
+    //lifter.InitSubsystem();
+    //intaker.InitSubsystem();
+    //nwTable.InitSubsystem();
+    spinner.InitSubsystem();
+>>>>>>> f3859d3f99289d166eb3837bfdd8b527e02a65a8
     //tester.InitSubsystem();
+    //encTest.InitSubsystem();
   }
 
   @Override
@@ -64,16 +78,22 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    Controller.GetInstance().ResetController();
   }
 
   @Override
   public void testPeriodic() {
-    baseDrive.SubsystemTeleopPeriodic();
+    //baseDrive.SubsystemTeleopPeriodic();
     //shooter.SubsystemTeleopPeriodic();
     //lifter.SubsystemTeleopPeriodic();
     //intaker.SubsystemTeleopPeriodic();
+<<<<<<< HEAD
     nwTable.SubsystemTeleopPeriodic();
     //spinner.SubsystemTeleopPeriodic();
+=======
+    //nwTable.SubsystemTeleopPeriodic();
+    spinner.SubsystemTeleopPeriodic();
+    //tester.SubsystemTeleopPeriodic();
+    //encTest.SubsystemTeleopPeriodic();
+>>>>>>> f3859d3f99289d166eb3837bfdd8b527e02a65a8
   }
 }
