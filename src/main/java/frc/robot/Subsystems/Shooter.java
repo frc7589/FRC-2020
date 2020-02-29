@@ -2,6 +2,7 @@ package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import frc.robot.MotionMagicMotor;
 import frc.robot.PID_Motor;
 
 public class Shooter extends SubsystemBase {
@@ -13,12 +14,15 @@ public class Shooter extends SubsystemBase {
 
     private PID_Motor lPID;
     private PID_Motor rPID;
-
+    private MotionMagicMotor lMM;
+    private MotionMagicMotor rMM;
     // 速度在這裡調，shootSpd是舊的，也就是調電壓
     private double[] shootSpd = {-.3, -.5};
     // 這邊是PID的速度控制，單位是更新率/100ms，用飛輪的話12代表1/10秒跑一圈=每秒10圈
-    // 開始調速度之前先調PID參數，33~34行
-    private double[] shootSpdPID = {12, 24};
+    // 開始調速度之前先調PID參數，37~38行
+    private int[] shootSpdPID = {12, 24};
+    // 袁的MotionMagic我不曉得能不能用，如果可以考慮下改用這個，Tune 40~41 行
+    private int[] shootSpdMM = {};
     private int speedIdx = 0;
 
     @Override
@@ -32,6 +36,9 @@ public class Shooter extends SubsystemBase {
         // 兩個需要的參數可能不一樣，把他們調到加速度差不多就好 
         lPID = new PID_Motor(lShooter, 0.02, 0, 0, 0, 0, 30);
         rPID = new PID_Motor(rShooter, 0.02, 0, 0, 0, 0, 30);
+
+        lMM = new MotionMagicMotor(lShooter, 0.02, 0, 0, 0, 0, 30);
+        rMM = new MotionMagicMotor(rShooter, 0.02, 0, 0, 0, 0, 30);
     }
 
     @Override
@@ -59,8 +66,12 @@ public class Shooter extends SubsystemBase {
         //rShooter.set(-shootSpd[speedIdx]);
 
         // 新的PID
-        lShooter.set(-shootSpdPID[speedIdx]);
-        rShooter.set(-shootSpdPID[speedIdx]);
+        lPID.VelControl(-shootSpdPID[speedIdx]);
+        rPID.VelControl(-shootSpdPID[speedIdx]);
+
+        // MotionMagic
+        lMM.testing(-shootSpdMM[speedIdx]);
+        lMM.testing(-shootSpdMM[speedIdx]);
     }
 
     public void StopShooting() {
