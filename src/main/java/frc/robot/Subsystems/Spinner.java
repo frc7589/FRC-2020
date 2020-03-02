@@ -15,6 +15,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class Spinner extends SubsystemBase {
 
+    // Singleton instance
+    private Spinner() {
+        InitSubsystem();}
+      private static Spinner instance = null;
+      public static Spinner GetInstance() {
+        if (instance==null) instance = new Spinner();
+        return instance;
+    }
     private final I2C.Port i2cPort = I2C.Port.kOnboard;
     private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
     private final ColorMatch m_colorMatcher = new ColorMatch();

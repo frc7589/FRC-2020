@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.XboxController;
 
 public class Controller {
 
-    // Singleton class
+    // Singleton instance
     private Controller() {};
 
     private static Controller Instance;

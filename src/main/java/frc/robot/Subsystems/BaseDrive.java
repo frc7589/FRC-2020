@@ -11,13 +11,22 @@ import frc.robot.*;
 
 public class BaseDrive extends SubsystemBase {
 
+    // Singleton instance
+    private BaseDrive() {
+      InitSubsystem();}
+    private static BaseDrive instance = null;
+    public static BaseDrive GetInstance() {
+      if (instance==null) instance = new BaseDrive();
+      return instance;
+    }
+
     private WPI_VictorSPX victor_l;
     private WPI_TalonSRX talon_l;
     private WPI_VictorSPX victor_r;
     private WPI_TalonSRX talon_r;
 
     private int speedChanel = 0;
-    private double[] speedList = {.4, .7, 1.};
+    private double[] speedList = {.4, .6, .8, 1.};
 
     private SpeedControllerGroup leftGroup;
     private SpeedControllerGroup rightGroup;
@@ -69,5 +78,10 @@ public class BaseDrive extends SubsystemBase {
     @Override
     public void SubsystemAutoPeriodic() {
       super.SubsystemAutoPeriodic();
+    }
+
+    public void SubsystemAutoInit() {
+      talon_l.setSelectedSensorPosition(0);
+      talon_r.setSelectedSensorPosition(0);
     }
 }
