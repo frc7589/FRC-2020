@@ -15,24 +15,27 @@ public class Intaker extends SubsystemBase {
 
     private WPI_VictorSPX intake;
 
-    private double highSpd = -.45;
-    private double lowSpd = -.2;
+    private double Spd1 = -.2;
+    private double Spd2 = .2;
+    private double Spd3 = -.5;
 
     @Override
     public void InitSubsystem() {
         super.InitSubsystem();
 
-        intake = new WPI_VictorSPX(5);
+        intake = new WPI_VictorSPX(4);
     }
 
     @Override
     public void SubsystemTeleopPeriodic() {
         super.SubsystemTeleopPeriodic();
-
-        if (xcon.getXButton()) {
-            intake.set(highSpd);
+        if (xcon.getXButton()&&xcon.getYButton()) {
+            intake.set(Spd3);
+        }
+        else if (xcon.getXButton()) {
+            intake.set(Spd1);
         }else if(xcon.getYButton()){
-            intake.set(lowSpd);
+            intake.set(Spd2);
         }
         else intake.set(0);
 

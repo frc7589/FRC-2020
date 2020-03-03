@@ -52,8 +52,8 @@ public class Spinner extends SubsystemBase {
         m_colorMatcher.addColorMatch(kRedTarget);
         m_colorMatcher.addColorMatch(kYellowTarget);
 
-        wheelArm = new Servo(0);
-        wheelSpinner = new WPI_VictorSPX(6);
+        wheelArm = new Servo(9);
+        wheelSpinner = new WPI_VictorSPX(5);
 
         targetColorIdx = 0;
         start = false;
@@ -69,7 +69,7 @@ public class Spinner extends SubsystemBase {
 
         // Toggle Spinner Arm
         if(xcon.getTriggerAxis(Hand.kRight) >= 0.5){
-            wheelArm.set(num);
+            wheelArm.set(num*.5);
             num = (num+1)%2;
         }
 
