@@ -15,9 +15,9 @@ public class Intaker extends SubsystemBase {
 
     private WPI_VictorSPX intake;
 
-    private double Spd1 = -.2;
-    private double Spd2 = .2;
-    private double Spd3 = -.5;
+    private double Spd1 = -.4;
+    private double Spd2 = .7;
+    private double Spd3 = -.7;
 
     @Override
     public void InitSubsystem() {

@@ -33,8 +33,8 @@ public class Shooter extends SubsystemBase {
         lShooter = new WPI_TalonSRX(2);
         rShooter = new WPI_TalonSRX(3);
                                       //f  P  I  D
-        lPID = new PID_Motor(lShooter, 20.5, 20, 0, 10, 0, 30);
-        rPID = new PID_Motor(rShooter, 20.5, 0, 0, 0, 0, 30);
+        lPID = new PID_Motor(lShooter, 20.5, 10, 0.2, 10, 0, 30);
+        rPID = new PID_Motor(rShooter, 20.5, 15, 0.1, 0, 0, 30);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class Shooter extends SubsystemBase {
             StartShooting();
         }
         else StopShooting();
-        lPID.PrintValue();
+        rPID.PrintValue();
     }
 
     public void StartShooting() {
