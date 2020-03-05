@@ -30,9 +30,11 @@ public class BaseDrive extends SubsystemBase {
     private PID_Motor leftPID;
     private PID_Motor rightPID;
 
-    private NetworkTable vTable;
+    private NetworkTable visionTable;
+    private NetworkTable autoTable;
     private double gap = 0.0;
     private double dist = 0.0;
+    private double stage = 0;
 
 
     @Override
@@ -53,7 +55,8 @@ public class BaseDrive extends SubsystemBase {
         //rightPID = new PID_Motor(talon_r, 0, 5, 0, 2, 0, 30);
         SmartDashboard.putNumber("Base Speed", speedList[speedChanel]);
         
-        vTable = NetworkTableInstance.getDefault().getTable("vision table");
+        visionTable = NetworkTableInstance.getDefault().getTable("vision table");
+        autoTable = NetworkTableInstance.getDefault().getTable("auto table");
     }
 
     @Override
@@ -83,17 +86,21 @@ public class BaseDrive extends SubsystemBase {
     public void SubsystemAutoPeriodic() {
       super.SubsystemAutoPeriodic();
       
-      gap = vTable.getEntry("Error Gap").getDouble(0.0);
-      dist = vTable.getEntry("distant").getDouble(0.0);
+      gap = visionTable.getEntry("Error Gap").getDouble(0.0);
+      dist = visionTable.getEntry("distant").getDouble(0.0);
+      stage = autoTable.getEntry("stage").getDouble(0);
 
-      if(gap >= 3.0){
-        baseDiffDrive.tankDrive(0.5, -0.5);
-      }
-      else if(gap <= -3.0){
-        baseDiffDrive.tankDrive(-0.5, 0.5);
-      }
-      else{
-        baseDiffDrive.tankDrive(0.0, 0.0);
+      if(stage == 1){
+        if(gap >= 5.0){
+          baseDiffDrive.tankDrive(0.5, -0.5);
+        }
+        else if(gap <= -5.0){
+          baseDiffDrive.tankDrive(-0.5, 0.5);
+        }
+        else{
+          baseDiffDrive.tankDrive(0.0, 0.0);
+          stage++;
+        }
       }
     }
 }

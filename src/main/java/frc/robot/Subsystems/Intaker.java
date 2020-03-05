@@ -20,23 +20,10 @@ public class Intaker extends SubsystemBase {
     public void SubsystemTeleopPeriodic() {
         super.SubsystemTeleopPeriodic();
 
-<<<<<<< HEAD
-        if (xcon.getXButtonPressed()) {
-            toggleWheel = !toggleWheel;
-            if (toggleWheel) intake.set(wheelSpd);
-            else intake.set(0);
-        }
-
-        if(xcon.getAButton()){
-            toggle = !toggle;
-            if(toggle)intake.set(wheelSpd);
-            else intake.set(0);
-=======
         if (xcon.getXButton()) {
             intake.set(highSpd);
         }else if(xcon.getYButton()){
             intake.set(lowSpd);
->>>>>>> f3859d3f99289d166eb3837bfdd8b527e02a65a8
         }
         else intake.set(0);
 

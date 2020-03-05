@@ -45,11 +45,7 @@ public class Spinner extends SubsystemBase {
         m_colorMatcher.addColorMatch(kYellowTarget);
 
         wheelArm = new Servo(0);
-<<<<<<< HEAD
-        wheelSpinner = new WPI_VictorSPX(0);
-=======
         wheelSpinner = new WPI_VictorSPX(6);
->>>>>>> f3859d3f99289d166eb3837bfdd8b527e02a65a8
 
         targetColorIdx = 0;
         start = false;
@@ -71,11 +67,7 @@ public class Spinner extends SubsystemBase {
 
         // Manual control
         if(xcon.getTriggerAxis(Hand.kLeft) >= 0.5){
-<<<<<<< HEAD
-            wheelSpinner.set(0.5);
-=======
             wheelSpinner.set(.3);
->>>>>>> f3859d3f99289d166eb3837bfdd8b527e02a65a8
         }
         else{
             wheelSpinner.set(0.0);

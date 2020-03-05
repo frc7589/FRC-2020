@@ -34,23 +34,14 @@ public class Robot extends TimedRobot {
     intaker = new Intaker();
     nwTable = new NWTable();
     spinner = new Spinner();
-<<<<<<< HEAD
+    encTest = new EncTest();
+    //tester = new Tester();
     baseDrive.InitSubsystem();
     //shooter.InitSubsystem();
     //lifter.InitSubsystem();
     //intaker.InitSubsystem();
-    nwTable.InitSubsystem();
-    //spinner.InitSubsystem();
-=======
-    encTest = new EncTest();
-    //tester = new Tester();
-    //baseDrive.InitSubsystem();
-    //shooter.InitSubsystem();
-    //lifter.InitSubsystem();
-    //intaker.InitSubsystem();
     //nwTable.InitSubsystem();
-    spinner.InitSubsystem();
->>>>>>> f3859d3f99289d166eb3837bfdd8b527e02a65a8
+    //spinner.InitSubsystem();
     //tester.InitSubsystem();
     //encTest.InitSubsystem();
   }
@@ -86,14 +77,9 @@ public class Robot extends TimedRobot {
     //shooter.SubsystemTeleopPeriodic();
     //lifter.SubsystemTeleopPeriodic();
     //intaker.SubsystemTeleopPeriodic();
-<<<<<<< HEAD
-    nwTable.SubsystemTeleopPeriodic();
-    //spinner.SubsystemTeleopPeriodic();
-=======
     //nwTable.SubsystemTeleopPeriodic();
-    spinner.SubsystemTeleopPeriodic();
+    //spinner.SubsystemTeleopPeriodic();
     //tester.SubsystemTeleopPeriodic();
     //encTest.SubsystemTeleopPeriodic();
->>>>>>> f3859d3f99289d166eb3837bfdd8b527e02a65a8
   }
 }
