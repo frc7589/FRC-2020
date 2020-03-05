@@ -4,26 +4,46 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 public class Intaker extends SubsystemBase {
 
+    // Singleton instance
+    private Intaker() {
+        InitSubsystem();}
+      private static Intaker instance = null;
+      public static Intaker GetInstance() {
+        if (instance==null) instance = new Intaker();
+        return instance;
+    }
+
     private WPI_VictorSPX intake;
 
-    private double highSpd = .45;
-    private double lowSpd = .2;
+    private double Spd1 = -.4;
+    private double Spd2 = .7;
+    private double Spd3 = -.7;
 
     @Override
     public void InitSubsystem() {
         super.InitSubsystem();
 
-        intake = new WPI_VictorSPX(5);
+        intake = new WPI_VictorSPX(4);
     }
 
     @Override
     public void SubsystemTeleopPeriodic() {
         super.SubsystemTeleopPeriodic();
+<<<<<<< HEAD
 
         if (xcon.getXButton()) {
             intake.set(highSpd);
         }else if(xcon.getYButton()){
             intake.set(lowSpd);
+=======
+        if (xcon.getXButton()&&xcon.getYButton()) {
+            intake.set(Spd3);
+        }
+        else if (xcon.getXButton()) {
+            intake.set(Spd1);
+        }else if(xcon.getYButton()){
+            intake.set(Spd2);
+>>>>>>> 736ab9af63929375772ee51b6d46189760b95b25
         }
         else intake.set(0);
 

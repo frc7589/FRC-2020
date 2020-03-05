@@ -15,6 +15,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class Spinner extends SubsystemBase {
 
+    // Singleton instance
+    private Spinner() {
+        InitSubsystem();}
+      private static Spinner instance = null;
+      public static Spinner GetInstance() {
+        if (instance==null) instance = new Spinner();
+        return instance;
+    }
     private final I2C.Port i2cPort = I2C.Port.kOnboard;
     private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
     private final ColorMatch m_colorMatcher = new ColorMatch();
@@ -44,8 +52,13 @@ public class Spinner extends SubsystemBase {
         m_colorMatcher.addColorMatch(kRedTarget);
         m_colorMatcher.addColorMatch(kYellowTarget);
 
+<<<<<<< HEAD
         wheelArm = new Servo(0);
         wheelSpinner = new WPI_VictorSPX(6);
+=======
+        wheelArm = new Servo(9);
+        wheelSpinner = new WPI_VictorSPX(5);
+>>>>>>> 736ab9af63929375772ee51b6d46189760b95b25
 
         targetColorIdx = 0;
         start = false;
@@ -61,7 +74,7 @@ public class Spinner extends SubsystemBase {
 
         // Toggle Spinner Arm
         if(xcon.getTriggerAxis(Hand.kRight) >= 0.5){
-            wheelArm.set(num);
+            wheelArm.set(num*.5);
             num = (num+1)%2;
         }
 

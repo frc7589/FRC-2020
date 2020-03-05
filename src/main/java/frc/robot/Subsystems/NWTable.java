@@ -6,8 +6,17 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 
 public class NWTable extends SubsystemBase{
-    public NetworkTableEntry startButtonEntry;
 
+    // Singleton instance
+    private NWTable() {
+        InitSubsystem();}
+      private static NWTable instance = null;
+      public static NWTable GetInstance() {
+        if (instance==null) instance = new NWTable();
+        return instance;
+    }
+
+    private NetworkTableEntry startButtonEntry;
     public NetworkTable vTable;
 
     @Override

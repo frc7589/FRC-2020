@@ -13,6 +13,15 @@ import frc.robot.*;
 
 public class BaseDrive extends SubsystemBase {
 
+    // Singleton instance
+    private BaseDrive() {
+      InitSubsystem();}
+    private static BaseDrive instance = null;
+    public static BaseDrive GetInstance() {
+      if (instance==null) instance = new BaseDrive();
+      return instance;
+    }
+
     private WPI_VictorSPX victor_l;
     private WPI_VictorSPX victor_l1;
     private WPI_TalonSRX talon_l;
@@ -21,7 +30,7 @@ public class BaseDrive extends SubsystemBase {
     private WPI_TalonSRX talon_r;
 
     private int speedChanel = 0;
-    private double[] speedList = {.4, .7, 1.};
+    private double[] speedList = {.4, .6, .8, 1.};
 
     private SpeedControllerGroup leftGroup;
     private SpeedControllerGroup rightGroup;
@@ -42,11 +51,11 @@ public class BaseDrive extends SubsystemBase {
         super.InitSubsystem();
 
         victor_l = new WPI_VictorSPX(0);
-        victor_l1 = new WPI_VictorSPX(2);
-        //talon_l = new WPI_TalonSRX(0);
+        //victor_l1 = new WPI_VictorSPX(2);
+        talon_l = new WPI_TalonSRX(0);
         victor_r = new WPI_VictorSPX(1);
-        victor_r1 = new WPI_VictorSPX(3);
-        //talon_r =  new WPI_TalonSRX(1);
+        //victor_r1 = new WPI_VictorSPX(3);
+        talon_r =  new WPI_TalonSRX(1);
 
         leftGroup = new SpeedControllerGroup(victor_l, victor_l1);
         rightGroup = new SpeedControllerGroup(victor_r, victor_r1);
@@ -102,5 +111,10 @@ public class BaseDrive extends SubsystemBase {
           stage++;
         }
       }
+    }
+
+    public void SubsystemAutoInit() {
+      talon_l.setSelectedSensorPosition(0);
+      talon_r.setSelectedSensorPosition(0);
     }
 }

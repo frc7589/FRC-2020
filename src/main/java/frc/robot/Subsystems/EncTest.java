@@ -7,6 +7,16 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.PID_Motor;
 
 public class EncTest extends SubsystemBase {
+
+    // Singleton instance
+    private EncTest() {
+        InitSubsystem();}
+      private static EncTest instance = null;
+      public static EncTest GetInstance() {
+        if (instance==null) instance = new EncTest();
+        return instance;
+      }
+    
     private WPI_TalonSRX lShooter;
     private WPI_TalonSRX rShooter;
     private WPI_VictorSPX trans;
@@ -27,7 +37,7 @@ public class EncTest extends SubsystemBase {
     @Override
     public void SubsystemTeleopPeriodic() {
         super.SubsystemTeleopPeriodic();
-        lPID.PrintValue();
+        rPID.PrintValue();
         if (xcon.getAButton()) {
             trans.set(.44);
         }
