@@ -26,9 +26,9 @@ public class Lifter extends SubsystemBase {
     public void InitSubsystem() {
         super.InitSubsystem();
 
-        elevator = new WPI_VictorSPX(3);
-        lift1 = new WPI_VictorSPX(5);
-        lift2 = new WPI_VictorSPX(6);
+        elevator = new WPI_VictorSPX(6); 
+        lift1 = new WPI_VictorSPX(3);
+        lift2 = new WPI_VictorSPX(5);
 
         lifter = new SpeedControllerGroup(lift1, lift2);
     }
@@ -38,17 +38,28 @@ public class Lifter extends SubsystemBase {
         super.SubsystemTeleopPeriodic();
 
         if(xcon.getPOV() == 0){
-            elevator.set(.4);
+            elevator.set(.6);
         }
         else if(xcon.getPOV() == 180){
-            elevator.set(-.4);
+            elevator.set(-.6);
         }
         else{
             elevator.set(0.0);
         }
 
         if(xcon.getBackButton()){
-            lifter.set(1.0);
+            lifter.set(0.7589);
+        }
+        else{
+            lifter.set(0.0);
+        }
+    }
+
+    @Override
+    public void SubsystemTestPeriodic() {
+        super.SubsystemTestPeriodic();
+        if(xcon.getBackButton()){
+            lifter.set(-0.7589);
         }
         else{
             lifter.set(0.0);

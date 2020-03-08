@@ -13,5 +13,11 @@ public abstract class SubsystemBase {
 
     public void SubsystemTeleopPeriodic() {}
 
+    public void SubsystemAutoInit() {}
+
     public void SubsystemAutoPeriodic() {}
+
+    public void SubsystemTestInit() {}
+
+    public void SubsystemTestPeriodic() {}
 }

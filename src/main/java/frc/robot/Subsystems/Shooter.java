@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import frc.robot.MotionMagicMotor;
 import frc.robot.PID_Motor;
 
 public class Shooter extends SubsystemBase {
@@ -50,7 +49,6 @@ public class Shooter extends SubsystemBase {
             StartShooting();
         }
         else StopShooting();
-        rPID.PrintValue();
     }
 
     public void StartShooting() {

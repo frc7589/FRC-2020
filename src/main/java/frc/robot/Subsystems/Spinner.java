@@ -16,8 +16,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class Spinner extends SubsystemBase {
 
     // Singleton instance
-    private Spinner() {
-        InitSubsystem();}
+    private Spinner() {}
       private static Spinner instance = null;
       public static Spinner GetInstance() {
         if (instance==null) instance = new Spinner();
@@ -53,11 +52,11 @@ public class Spinner extends SubsystemBase {
         m_colorMatcher.addColorMatch(kYellowTarget);
 
         wheelArm = new Servo(9);
-        wheelSpinner = new WPI_VictorSPX(5);
+        wheelSpinner = new WPI_VictorSPX(2);
 
         targetColorIdx = 0;
         start = false;
-        wheelArm.set(0.0);
+        wheelArm.set(0.50); // 0.36, 0.50
         num = 0;
     }
 
