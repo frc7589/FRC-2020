@@ -15,11 +15,13 @@ public class PID_Motor {
       _talon = targetTalonSRX;
       set(F_value, P_value, I_value, D_value, pidIdx, timeout);
     }
+
     public void set(double F_value, double P_value, double I_value,
      double D_value, int pidIdx, int timeout) {
+       slotIdx = pidIdx;
       _talon.configFactoryDefault();
 		  _talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 
-      pidIdx,timeout);
+                                            slotIdx,timeout);
 
 		  _talon.setSensorPhase(true);
 
@@ -30,16 +32,16 @@ public class PID_Motor {
 		  _talon.configPeakOutputForward(1, timeout);
 		  _talon.configPeakOutputReverse(-1, timeout);
 
-		  _talon.configAllowableClosedloopError(0, pidIdx, timeout);
-      _talon.config_kF(pidIdx, F_value, timeout);
-      _talon.config_kP(pidIdx, P_value, timeout);
-      _talon.config_kI(pidIdx, I_value, timeout);
-      _talon.config_kD(pidIdx, D_value, timeout);
+		  _talon.configAllowableClosedloopError(0, slotIdx, timeout);
+      _talon.config_kF(slotIdx, F_value, timeout);
+      _talon.config_kP(slotIdx, P_value, timeout);
+      _talon.config_kI(slotIdx, I_value, timeout);
+      _talon.config_kD(slotIdx, D_value, timeout);
 
       int absolutePosition = _talon.getSensorCollection().getPulseWidthPosition();
       absolutePosition &= 0xFFF;
       absolutePosition *= -1;
-      _talon.setSelectedSensorPosition(absolutePosition, pidIdx, timeout);
+      _talon.setSelectedSensorPosition(absolutePosition, slotIdx, timeout);
      }
     // Write commonly used function below or simply use PID_Motor._talon.WHATEVERTHEYHAVE()
     int printLoop = 0;
@@ -54,9 +56,6 @@ public class PID_Motor {
 		  _sb.append("\tpos:");
 		  _sb.append(_talon.getSelectedSensorPosition(0));
       _sb.append("u"); 	// Native units
-      _sb.append("\tvel:");
-		  _sb.append(_talon.getSelectedSensorVelocity(0));
-      _sb.append("u"); 	// Native units
       if (_talon.getControlMode() == ControlMode.Position) {
         /* ppend more signals to print when in speed mode. */
         _sb.append("\terr:");
@@ -65,7 +64,7 @@ public class PID_Motor {
   
         _sb.append("\ttrg:");
         _sb.append(targetPositionRotations);
-        _sb.append("u");	/// Native Units
+        _sb.append("u");	// Native Units
       }
       else if (_talon.getControlMode() == ControlMode.Velocity) {
       _sb.append("\t err:");
@@ -80,7 +79,6 @@ public class PID_Motor {
       }
       _sb.setLength(0);
     }
-    
     public void PosControl(int targetPos) {
       targetPositionRotations = targetPos;
       _talon.set(ControlMode.Position, targetPositionRotations);

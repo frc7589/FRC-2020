@@ -29,13 +29,6 @@ public class Intaker extends SubsystemBase {
     @Override
     public void SubsystemTeleopPeriodic() {
         super.SubsystemTeleopPeriodic();
-<<<<<<< HEAD
-
-        if (xcon.getXButton()) {
-            intake.set(highSpd);
-        }else if(xcon.getYButton()){
-            intake.set(lowSpd);
-=======
         if (xcon.getXButton()&&xcon.getYButton()) {
             intake.set(Spd3);
         }
@@ -43,7 +36,6 @@ public class Intaker extends SubsystemBase {
             intake.set(Spd1);
         }else if(xcon.getYButton()){
             intake.set(Spd2);
->>>>>>> 736ab9af63929375772ee51b6d46189760b95b25
         }
         else intake.set(0);
 

@@ -52,13 +52,8 @@ public class Spinner extends SubsystemBase {
         m_colorMatcher.addColorMatch(kRedTarget);
         m_colorMatcher.addColorMatch(kYellowTarget);
 
-<<<<<<< HEAD
-        wheelArm = new Servo(0);
-        wheelSpinner = new WPI_VictorSPX(6);
-=======
         wheelArm = new Servo(9);
         wheelSpinner = new WPI_VictorSPX(5);
->>>>>>> 736ab9af63929375772ee51b6d46189760b95b25
 
         targetColorIdx = 0;
         start = false;

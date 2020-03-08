@@ -1,13 +1,10 @@
 package frc.robot.Subsystems;
 
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 
-=======
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
->>>>>>> 736ab9af63929375772ee51b6d46189760b95b25
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -30,18 +27,8 @@ public class Shooter extends SubsystemBase {
 
     private PID_Motor lPID;
     private PID_Motor rPID;
-<<<<<<< HEAD
-    // 速度在這裡調，shootSpd是舊的，也就是調電壓
-    private double[] shootSpd = {-.3, -.5};
-    // 這邊是PID的速度控制，單位是更新率/100ms，用飛輪的話12代表1/10秒跑一圈=每秒10圈
-    // 開始調速度之前先調PID參數，37~38行
-    private int[] shootSpdPID = {12, 24};
-    // 袁的MotionMagic我不曉得能不能用，如果可以考慮下改用這個，Tune 40~41 行
-    private int[] shootSpdMM = {};
-=======
     private double[] shootSpd = {.087, .85};
     private int[] shootSpdPID = {12, 32 };
->>>>>>> 736ab9af63929375772ee51b6d46189760b95b25
     private int speedIdx = 0;
 
     private NetworkTable visionTable;
@@ -60,20 +47,9 @@ public class Shooter extends SubsystemBase {
 
         lShooter = new WPI_TalonSRX(2);
         rShooter = new WPI_TalonSRX(3);
-<<<<<<< HEAD
-        // Tune P 和 D 就好，分別是第二個和第四個數字
-        // e.g. (lshooter, 0.02, 0.01, 0, 0.1, 0, 30)
-        // 兩個需要的參數可能不一樣，把他們調到加速度差不多就好 
-        lPID = new PID_Motor(lShooter, 0.02, 0, 0, 0, 0, 30);
-        rPID = new PID_Motor(rShooter, 0.02, 0, 0, 0, 0, 30);
-
-        visionTable = NetworkTableInstance.getDefault().getTable("vision table");
-        autoTable = NetworkTableInstance.getDefault().getTable("auto table");
-=======
                                       //f  P  I  D
         lPID = new PID_Motor(lShooter, 20.5, 10, 0.2, 10, 0, 30);
         rPID = new PID_Motor(rShooter, 20.5, 15, 0.1, 0, 0, 30);
->>>>>>> 736ab9af63929375772ee51b6d46189760b95b25
     }
 
     @Override
