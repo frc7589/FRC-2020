@@ -38,6 +38,5 @@ public class Intaker extends SubsystemBase {
             intake.set(Spd2);
         }
         else intake.set(0);
-
     }
 }

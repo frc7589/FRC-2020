@@ -27,12 +27,13 @@ public class Robot extends TimedRobot {
     shooter = Shooter.GetInstance(); 
     lifter = Lifter.GetInstance();
     nwTable = NWTable.GetInstance();
-    //spinner = Spinner.GetInstance();
+    spinner = Spinner.GetInstance();
     encTest = EncTest.GetInstance();
   }
 
   @Override
   public void robotPeriodic() {
+    
   }
 
   @Override
@@ -48,7 +49,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() { 
     shooter.InitSubsystem();
-    intaker.InitSubsystem();
+    baseDrive.InitSubsystem();
+    spinner.InitSubsystem();
   }
 
   @Override
@@ -58,14 +60,13 @@ public class Robot extends TimedRobot {
     lifter.SubsystemTeleopPeriodic();
     intaker.SubsystemTeleopPeriodic();
     nwTable.SubsystemTeleopPeriodic();
-    //spinner.SubsystemTeleopPeriodic();
+    spinner.SubsystemTeleopPeriodic();
     //tester.SubsystemTeleopPeriodic();
     //encTest.SubsystemTeleopPeriodic();
   }
 
   @Override
   public void testInit() {
-    
   }
 
   @Override

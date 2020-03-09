@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class Controller {
 
@@ -36,5 +37,15 @@ public class Controller {
         }
         if (xcon.getPOV() != 90) RightPressed = false;
         return (xcon.getPOV() == 90);
+    }
+
+    private boolean RTPressed = false;
+    public boolean GetRightTriggerPressed() {
+        if (!RTPressed && xcon.getTriggerAxis(Hand.kRight) >= .7) {
+            RTPressed = true;
+            return true;
+        }
+        if (xcon.getTriggerAxis(Hand.kRight) < .7) RTPressed = true;
+        return (xcon.getTriggerAxis(Hand.kRight) >= .7);
     }
 }

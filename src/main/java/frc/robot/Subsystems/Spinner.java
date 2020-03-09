@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Controller;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class Spinner extends SubsystemBase {
@@ -32,8 +33,10 @@ public class Spinner extends SubsystemBase {
 
     private String[] color = {"Blue","Green","Red","Yellow"};
 
-    private Servo wheelArm;
+    private WPI_VictorSPX wheelArm;
     private WPI_VictorSPX wheelSpinner;
+    private DigitalInput downLimit;
+    private DigitalInput upLimit;
 
     private String colorString;
     private int targetColorIdx;
@@ -51,8 +54,10 @@ public class Spinner extends SubsystemBase {
         m_colorMatcher.addColorMatch(kRedTarget);
         m_colorMatcher.addColorMatch(kYellowTarget);
 
-        wheelArm = new Servo(9);
+        wheelArm = new WPI_VictorSPX(7);
         wheelSpinner = new WPI_VictorSPX(2);
+        downLimit = new DigitalInput(8);
+        upLimit = new DigitalInput(9);
 
         targetColorIdx = 0;
         start = false;
@@ -68,8 +73,11 @@ public class Spinner extends SubsystemBase {
 
         // Toggle Spinner Arm
         if(xcon.getTriggerAxis(Hand.kRight) >= 0.5){
-            wheelArm.set(num*.5);
-            num = (num+1)%2;
+            if (!upLimit.get()) wheelArm.set(.31415926535);
+            else wheelArm.set(0);
+        }
+        else {
+            wheelArm.set(0);
         }
 
         // Manual control
