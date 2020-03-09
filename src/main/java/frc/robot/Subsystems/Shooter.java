@@ -24,6 +24,7 @@ public class Shooter extends SubsystemBase {
 
     private PID_Motor lPID;
     private PID_Motor rPID;
+    
     private double[] shootSpd = {.087, .85};
     private int[] shootSpdPID = {12, 32};
     private int speedIdx = 0;

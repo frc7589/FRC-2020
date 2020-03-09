@@ -15,7 +15,6 @@ public class BaseDrive extends SubsystemBase {
 
   // Singleton instance
   private BaseDrive() {
-    InitSubsystem();
   }
 
   private static BaseDrive instance = null;
@@ -108,16 +107,8 @@ public class BaseDrive extends SubsystemBase {
       gap = visionTable.getEntry("Error Gap").getDouble(0.0);
       dist = visionTable.getEntry("distant").getDouble(0.0);
 
-        if(gap >= 5.0){
-          baseDiffDrive.tankDrive(0.5, -0.5);
-        }
-        else if(gap <= -5.0){
-          baseDiffDrive.tankDrive(-0.5, 0.5);
-        }
-        else{
-          baseDiffDrive.tankDrive(0.0, 0.0);
-        }
       switch (pathIdx) {
+        /*
         case 0:
           BaseDriveStraightMeter(2);
           CheckNextAction();
@@ -134,6 +125,7 @@ public class BaseDrive extends SubsystemBase {
           BaseDriveTurn(-90);
           CheckNextAction();
           break;
+          */
         default:
         System.out.println("Bruh");
         break;
